@@ -76,7 +76,7 @@
         End If
         'Trie du tableau
         Dim tempUser As User
-        For counter As Integer = 0 To nb_player + 1
+        For counter As Integer = 0 To users.Length - 1
             tempUser = OldestUserInArray(usersTemp)
             users(counter) = tempUser
             deleteUserInArray(usersTemp, tempUser)
@@ -125,10 +125,12 @@ Public Class User
 
     Dim name As String
     Dim age As Integer
+    Dim nb_points As Integer
 
     Sub New(ByVal nameValue As String, ByVal ageValue As Integer)
         name = nameValue
         age = ageValue
+        nb_points = 0
     End Sub
 
     Function getAge() As Integer
@@ -137,6 +139,10 @@ Public Class User
 
     Function getName() As String
         Return name
+    End Function
+
+    Function getNbPoints() As Integer
+        Return nb_points
     End Function
 
 End Class
