@@ -4,6 +4,18 @@
     Dim users(3) As User
     Dim pick As Pick = New Pick()
 
+    Function getPick() As Pick
+        Return pick
+    End Function
+
+    Function getNbPlayer() As Integer
+        Return nb_player
+    End Function
+
+    Function getUsers() As User()
+        Return users
+    End Function
+
     Private Sub Form_Begin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         enableNames()
         lbl_remplir.Visible = False
@@ -264,146 +276,4 @@
             My.Forms.Form_Partie.Show()
         End If
     End Sub
-End Class
-
-
-Public Class User
-
-    Dim name As String
-    Dim age As Integer
-    Dim nb_points As Integer
-    Dim deckArray(5) As Integer
-    Dim sizeBestDeck As Integer
-
-    Sub New(ByVal nameValue As String, ByVal ageValue As Integer)
-        name = nameValue
-        age = ageValue
-        nb_points = 0
-        sizeBestDeck = 0
-    End Sub
-
-    Function getAge() As Integer
-        Return age
-    End Function
-
-    Function getName() As String
-        Return name
-    End Function
-
-    Function getNbPoints() As Integer
-        Return nb_points
-    End Function
-
-    Sub generateDeck(ByRef pick)
-        Dim tokenId As Integer
-        For counter As Integer = 0 To deckArray.Length - 1
-            If (Not pick.isEmpty) Then
-                Do
-                    tokenId = CInt(107 * Rnd() + 1)
-                    deckArray(counter) = pick.getToken(tokenId)
-                Loop Until Not IsNothing(pick.getToken(tokenId))
-            End If
-        Next
-    End Sub
-
-    Function getDeckArray() As Integer()
-        Return deckArray
-    End Function
-
-    Sub setSizeBestDeck(ByVal size As Integer)
-        sizeBestDeck = size
-    End Sub
-
-    Function getSizeBestDeck() As Integer
-        Return sizeBestDeck
-    End Function
-
-    Function getTokenName(ByVal tokenCode As Integer)
-        Dim color As String
-        Dim form As String
-        Select Case tokenCode
-            Case 10 To 16
-                color = "Rouge"
-            Case 20 To 26
-                color = "Orange"
-            Case 30 To 36
-                color = "Jaune"
-            Case 40 To 46
-                color = "Vert"
-            Case 50 To 56
-                color = "Bleu"
-            Case 60 To 66
-                color = "Violet"
-            Case Else
-                Return "nothing"
-        End Select
-        Select Case tokenCode Mod 10
-            Case 1
-                form = "Rond"
-            Case 2
-                form = "Croix"
-            Case 3
-                form = "Losange"
-            Case 4
-                form = "Carre"
-            Case 5
-                form = "Etoile"
-            Case 6
-                form = "Trefle"
-            Case Else
-                Return "nothing"
-        End Select
-        Return form & color
-    End Function
-
-    'Indicateur de couleur
-    '10 : Rouge
-    '20 : Orange
-    '30 : Jaune
-    '40 : Vert
-    '50 : Bleu
-    '60 : Violet
-    'Indicateur de forme
-    '1 : Rond
-    '2 : Croix
-    '3 : Losange
-    '4 : Carré
-    '5 : Etoile
-    '6 : Plus
-
-End Class
-
-Class Pick
-    Dim tokens(107) As Integer
-
-    Sub New()
-        generatePick()
-    End Sub
-
-    Sub generatePick()
-        Dim counter As Integer = 0
-        For nb_pick As Integer = 0 To 2
-            For tempColor As Integer = 1 To 6
-                For tempForm As Integer = 1 To 6
-                    tokens(counter) = tempColor * 10 + tempForm
-                    counter = counter + 1
-                Next
-            Next
-        Next
-    End Sub
-
-    Function getToken(ByVal id As Integer) As Integer
-        Return tokens(id)
-    End Function
-
-    Function isEmpty() As Boolean
-        Dim response As Boolean = True
-        For Each token As Boolean In tokens
-            If (Not IsNothing(token)) Then
-                response = False
-            End If
-        Next
-        Return response
-    End Function
-
 End Class
