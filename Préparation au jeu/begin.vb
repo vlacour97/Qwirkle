@@ -2,6 +2,7 @@
 
     Dim nb_player As Integer
     Dim users(3) As User
+    Dim pick As Pick = New Pick()
 
     Private Sub Form_Begin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         enableNames()
@@ -143,7 +144,7 @@
 
     Sub showDeck(ByVal idUser As Integer)
         Dim user As User = users(idUser)
-        user.generateDeck()
+        user.generateDeck(pick)
         lbl_name_player.Visible = True
         lbl_name_player.Text = user.getName()
         chbox1.Checked = False
@@ -250,6 +251,7 @@
                 Else
                     cleanDeck()
                     showPlayerNames()
+                    btn_play.Tag = True
                 End If
             Else
                 lbl_false.Visible = True
@@ -257,6 +259,11 @@
         End If
     End Sub
 
+    Private Sub btn_play_Click(sender As Object, e As EventArgs) Handles btn_play.Click
+        If (sender.Tag = True) Then
+            My.Forms.Form_Partie.Show()
+        End If
+    End Sub
 End Class
 
 
@@ -287,13 +294,15 @@ Public Class User
         Return nb_points
     End Function
 
-    Sub generateDeck()
-        Dim tempColor As Integer
-        Dim tempForm As Integer
+    Sub generateDeck(ByRef pick)
+        Dim tokenId As Integer
         For counter As Integer = 0 To deckArray.Length - 1
-            tempColor = CInt(Int((6 * Rnd()) + 1)) * 10
-            tempForm = CInt(Int((6 * Rnd()) + 1))
-            deckArray(counter) = tempColor + tempForm
+            If (Not pick.isEmpty) Then
+                Do
+                    tokenId = CInt(107 * Rnd() + 1)
+                    deckArray(counter) = pick.getToken(tokenId)
+                Loop Until Not IsNothing(pick.getToken(tokenId))
+            End If
         Next
     End Sub
 
@@ -361,5 +370,40 @@ Public Class User
     '4 : Carré
     '5 : Etoile
     '6 : Plus
+
+End Class
+
+Class Pick
+    Dim tokens(107) As Integer
+
+    Sub New()
+        generatePick()
+    End Sub
+
+    Sub generatePick()
+        Dim counter As Integer = 0
+        For nb_pick As Integer = 0 To 2
+            For tempColor As Integer = 1 To 6
+                For tempForm As Integer = 1 To 6
+                    tokens(counter) = tempColor * 10 + tempForm
+                    counter = counter + 1
+                Next
+            Next
+        Next
+    End Sub
+
+    Function getToken(ByVal id As Integer) As Integer
+        Return tokens(id)
+    End Function
+
+    Function isEmpty() As Boolean
+        Dim response As Boolean = True
+        For Each token As Boolean In tokens
+            If (Not IsNothing(token)) Then
+                response = False
+            End If
+        Next
+        Return response
+    End Function
 
 End Class
