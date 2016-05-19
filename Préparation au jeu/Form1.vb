@@ -64,26 +64,40 @@
     Sub generateUsertab()
         'Génération du tableau temporaire
         Dim usersTemp(3) As User
-        usersTemp(0) = New User(txt_box_fname1.Text, txt_box_age1.Text)
-        usersTemp(1) = New User(txt_box_fname2.Text, txt_box_age2.Text)
-        If (nb_player > 2) Then
-            usersTemp(2) = New User(txt_box_fname3.Text, txt_box_age3.Text)
-        Else
-            usersTemp(2) = New User("NC", 0)
-        End If
-        If (nb_player > 3) Then
-            usersTemp(3) = New User(txt_box_fname4.Text, txt_box_age4.Text)
-        Else
-            usersTemp(3) = New User("NC", 0)
-        End If
+        For counter As Integer = 0 To users.Length - 1
+            usersTemp(counter) = users(counter)
+        Next
         'Trie du tableau
         Dim tempUser As User
         For counter As Integer = 0 To users.Length - 1
-            tempUser = OldestUserInArray(usersTemp)
+            tempUser = BestDeckUserInArray(usersTemp)
             users(counter) = tempUser
             deleteUserInArray(usersTemp, tempUser)
         Next
+        If users(0).getSizeBestDeck() = users(1).getSizeBestDeck() Then
+            For counter As Integer = 0 To users.Length - 1
+                usersTemp(counter) = users(counter)
+            Next
+            Dim counter2 As Integer = 0
+            While (usersTemp(counter2).getSizeBestDeck = usersTemp(counter2 + 1).getSizeBestDeck() And counter2 < 2)
+                tempUser = OldestUserInArray(usersTemp)
+                users(counter2) = tempUser
+                deleteUserInArray(usersTemp, tempUser)
+                counter2 = counter2 + 1
+            End While
+        End If
     End Sub
+
+    Function BestDeckUserInArray(ByVal users() As User) As User
+        Dim response As User
+        response = New User("NC", 0)
+        For Each user As User In users
+            If (user.getSizeBestDeck > response.getSizeBestDeck) Then
+                response = user
+            End If
+        Next
+        Return response
+    End Function
 
     Function OldestUserInArray(ByVal users() As User) As User
         Dim response As User
@@ -102,6 +116,21 @@
                 userArray(counter) = New User("NC", 0)
             End If
         Next
+    End Sub
+
+    Sub initializeUsers()
+        users(0) = New User(txt_box_fname1.Text, txt_box_age1.Text)
+        users(1) = New User(txt_box_fname2.Text, txt_box_age2.Text)
+        If (nb_player > 2) Then
+            users(2) = New User(txt_box_fname3.Text, txt_box_age3.Text)
+        Else
+            users(2) = New User("NC", 0)
+        End If
+        If (nb_player > 3) Then
+            users(3) = New User(txt_box_fname4.Text, txt_box_age4.Text)
+        Else
+            users(3) = New User("NC", 0)
+        End If
     End Sub
 
     Sub showPlayerNames()
@@ -141,7 +170,7 @@
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
         If (formIsValid()) Then
             lbl_remplir.Visible = False
-            showPlayerNames()
+            initializeUsers()
             showDeck(0)
         Else
             lbl_remplir.Visible = True
@@ -162,65 +191,69 @@
         picbox_5.Image = My.Resources.ResourceManager.GetObject("Nothing")
         picbox_6.Image = My.Resources.ResourceManager.GetObject("Nothing")
         lbl_name_player.Visible = False
+        btn_OK2.Tag = Nothing
     End Sub
 
     Private Sub btn_OK2_Click(sender As Object, e As EventArgs) Handles btn_OK2.Click
-        'Récuperation de l'utilisateur et Initialisation
-        Dim idUser As Integer = sender.Tag
-        Dim bestDeck(5) As Integer
-        Dim counter As Integer = 0
-        Dim AbleForms As Integer = 0
-        Dim AbleColors As Integer = 0
-        'Vérification de la combinaison
-        If chbox1.Checked Then
-            bestDeck(counter) = chbox1.Tag
-            counter = counter + 1
-        End If
-        If chbox2.Checked Then
-            bestDeck(counter) = chbox2.Tag
-            counter = counter + 1
-        End If
-        If chbox3.Checked Then
-            bestDeck(counter) = chbox3.Tag
-            counter = counter + 1
-        End If
-        If chbox4.Checked Then
-            bestDeck(counter) = chbox4.Tag
-            counter = counter + 1
-        End If
-        If chbox5.Checked Then
-            bestDeck(counter) = chbox5.Tag
-            counter = counter + 1
-        End If
-        If chbox6.Checked Then
-            bestDeck(counter) = chbox6.Tag
-            counter = counter + 1
-        End If
-        'Vérification Couleur
-        For counter2 As Integer = 1 To counter - 1
-            If Math.Truncate(bestDeck(counter2) / 10) = Math.Truncate(bestDeck(counter2 - 1) / 10) Then
-                AbleColors = AbleColors + 1
+        If (Not IsNothing(btn_OK2.Tag)) Then
+            'Récuperation de l'utilisateur et Initialisation
+            Dim idUser As Integer = sender.Tag
+            Dim bestDeck(5) As Integer
+            Dim counter As Integer = 0
+            Dim AbleForms As Integer = 0
+            Dim AbleColors As Integer = 0
+            'Vérification de la combinaison
+            If chbox1.Checked Then
+                bestDeck(counter) = chbox1.Tag
+                counter = counter + 1
             End If
-        Next
-        'Vérification Forme
-        For counter2 As Integer = 1 To counter - 1
-            Dim aa As Double = bestDeck(counter2) Mod 10
-            Dim bb As Double = bestDeck(counter2 - 1) Mod 10
-            If bestDeck(counter2 - 1) Mod 10 = bestDeck(counter2) Mod 10 Then
-                AbleForms = AbleForms + 1
+            If chbox2.Checked Then
+                bestDeck(counter) = chbox2.Tag
+                counter = counter + 1
             End If
-        Next
-        'Inscription de la taille de la combinaison
-        If (AbleForms + 1 = counter Or AbleColors + 1 = counter) Then
-            lbl_false.Visible = False
-            users(idUser).setSizeBestDeck(counter)
-            If (idUser + 1 < nb_player) Then
-                showDeck(idUser + 1)
+            If chbox3.Checked Then
+                bestDeck(counter) = chbox3.Tag
+                counter = counter + 1
+            End If
+            If chbox4.Checked Then
+                bestDeck(counter) = chbox4.Tag
+                counter = counter + 1
+            End If
+            If chbox5.Checked Then
+                bestDeck(counter) = chbox5.Tag
+                counter = counter + 1
+            End If
+            If chbox6.Checked Then
+                bestDeck(counter) = chbox6.Tag
+                counter = counter + 1
+            End If
+            'Vérification Couleur
+            For counter2 As Integer = 1 To counter - 1
+                If Math.Truncate(bestDeck(counter2) / 10) = Math.Truncate(bestDeck(counter2 - 1) / 10) Then
+                    AbleColors = AbleColors + 1
+                End If
+            Next
+            'Vérification Forme
+            For counter2 As Integer = 1 To counter - 1
+                Dim aa As Double = bestDeck(counter2) Mod 10
+                Dim bb As Double = bestDeck(counter2 - 1) Mod 10
+                If bestDeck(counter2 - 1) Mod 10 = bestDeck(counter2) Mod 10 Then
+                    AbleForms = AbleForms + 1
+                End If
+            Next
+            'Inscription de la taille de la combinaison
+            If (AbleForms + 1 = counter Or AbleColors + 1 = counter) Then
+                lbl_false.Visible = False
+                users(idUser).setSizeBestDeck(counter)
+                If (idUser + 1 < nb_player) Then
+                    showDeck(idUser + 1)
+                Else
+                    cleanDeck()
+                    showPlayerNames()
+                End If
             Else
-                cleanDeck()
+                lbl_false.Visible = True
             End If
-        Else
-            lbl_false.Visible = True
         End If
     End Sub
 
