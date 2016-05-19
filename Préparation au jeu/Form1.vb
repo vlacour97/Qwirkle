@@ -6,6 +6,8 @@
     Private Sub Form_Begin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         enableNames()
         lbl_remplir.Visible = False
+        lbl_false.Visible = False
+        lbl_name_player.Visible = False
     End Sub
 
     Private Sub num_nb_player_ValueChanged(sender As Object, e As EventArgs) Handles num_nb_player.ValueChanged
@@ -110,8 +112,17 @@
         lbl_fourth_name.Text = users(3).getName
     End Sub
 
-    Sub showDeck(ByVal user As User)
+    Sub showDeck(ByVal idUser As Integer)
+        Dim user As User = users(idUser)
         user.generateDeck()
+        lbl_name_player.Visible = True
+        lbl_name_player.Text = user.getName()
+        chbox1.Checked = False
+        chbox2.Checked = False
+        chbox3.Checked = False
+        chbox4.Checked = False
+        chbox5.Checked = False
+        chbox6.Checked = False
         picbox_1.Image = My.Resources.ResourceManager.GetObject(user.getTokenName(user.getDeckArray(0)))
         picbox_2.Image = My.Resources.ResourceManager.GetObject(user.getTokenName(user.getDeckArray(1)))
         picbox_3.Image = My.Resources.ResourceManager.GetObject(user.getTokenName(user.getDeckArray(2)))
@@ -124,21 +135,95 @@
         chbox4.Tag = user.getDeckArray(3)
         chbox5.Tag = user.getDeckArray(4)
         chbox6.Tag = user.getDeckArray(5)
+        btn_OK2.Tag = idUser
     End Sub
 
     Private Sub btn_OK_Click(sender As Object, e As EventArgs) Handles btn_OK.Click
         If (formIsValid()) Then
             lbl_remplir.Visible = False
             showPlayerNames()
-            showDeck(users(0))
+            showDeck(0)
         Else
             lbl_remplir.Visible = True
         End If
     End Sub
 
-    Private Sub btn_OK2_Click(sender As Object, e As EventArgs) Handles btn_OK2.Click
-
+    Sub cleanDeck()
+        chbox1.Checked = False
+        chbox2.Checked = False
+        chbox3.Checked = False
+        chbox4.Checked = False
+        chbox5.Checked = False
+        chbox6.Checked = False
+        picbox_1.Image = My.Resources.ResourceManager.GetObject("Nothing")
+        picbox_2.Image = My.Resources.ResourceManager.GetObject("Nothing")
+        picbox_3.Image = My.Resources.ResourceManager.GetObject("Nothing")
+        picbox_4.Image = My.Resources.ResourceManager.GetObject("Nothing")
+        picbox_5.Image = My.Resources.ResourceManager.GetObject("Nothing")
+        picbox_6.Image = My.Resources.ResourceManager.GetObject("Nothing")
+        lbl_name_player.Visible = False
     End Sub
+
+    Private Sub btn_OK2_Click(sender As Object, e As EventArgs) Handles btn_OK2.Click
+        'Récuperation de l'utilisateur et Initialisation
+        Dim idUser As Integer = sender.Tag
+        Dim bestDeck(5) As Integer
+        Dim counter As Integer = 0
+        Dim AbleForms As Integer = 0
+        Dim AbleColors As Integer = 0
+        'Vérification de la combinaison
+        If chbox1.Checked Then
+            bestDeck(counter) = chbox1.Tag
+            counter = counter + 1
+        End If
+        If chbox2.Checked Then
+            bestDeck(counter) = chbox2.Tag
+            counter = counter + 1
+        End If
+        If chbox3.Checked Then
+            bestDeck(counter) = chbox3.Tag
+            counter = counter + 1
+        End If
+        If chbox4.Checked Then
+            bestDeck(counter) = chbox4.Tag
+            counter = counter + 1
+        End If
+        If chbox5.Checked Then
+            bestDeck(counter) = chbox5.Tag
+            counter = counter + 1
+        End If
+        If chbox6.Checked Then
+            bestDeck(counter) = chbox6.Tag
+            counter = counter + 1
+        End If
+        'Vérification Couleur
+        For counter2 As Integer = 1 To counter - 1
+            If Math.Truncate(bestDeck(counter2) / 10) = Math.Truncate(bestDeck(counter2 - 1) / 10) Then
+                AbleColors = AbleColors + 1
+            End If
+        Next
+        'Vérification Forme
+        For counter2 As Integer = 1 To counter - 1
+            Dim aa As Double = bestDeck(counter2) Mod 10
+            Dim bb As Double = bestDeck(counter2 - 1) Mod 10
+            If bestDeck(counter2 - 1) Mod 10 = bestDeck(counter2) Mod 10 Then
+                AbleForms = AbleForms + 1
+            End If
+        Next
+        'Inscription de la taille de la combinaison
+        If (AbleForms + 1 = counter Or AbleColors + 1 = counter) Then
+            lbl_false.Visible = False
+            users(idUser).setSizeBestDeck(counter)
+            If (idUser + 1 < nb_player) Then
+                showDeck(idUser + 1)
+            Else
+                cleanDeck()
+            End If
+        Else
+            lbl_false.Visible = True
+        End If
+    End Sub
+
 End Class
 
 
@@ -148,11 +233,13 @@ Public Class User
     Dim age As Integer
     Dim nb_points As Integer
     Dim deckArray(5) As Integer
+    Dim sizeBestDeck As Integer
 
     Sub New(ByVal nameValue As String, ByVal ageValue As Integer)
         name = nameValue
         age = ageValue
         nb_points = 0
+        sizeBestDeck = 0
     End Sub
 
     Function getAge() As Integer
@@ -179,6 +266,14 @@ Public Class User
 
     Function getDeckArray() As Integer()
         Return deckArray
+    End Function
+
+    Sub setSizeBestDeck(ByVal size As Integer)
+        sizeBestDeck = size
+    End Sub
+
+    Function getSizeBestDeck() As Integer
+        Return sizeBestDeck
     End Function
 
     Function getTokenName(ByVal tokenCode As Integer)
