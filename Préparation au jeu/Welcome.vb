@@ -7,4 +7,9 @@
     Private Sub btn_leave_Click(sender As Object, e As EventArgs) Handles btn_leave.Click
         Me.Close()
     End Sub
+
+    Private Sub ranking_Click(sender As Object, e As EventArgs) Handles ranking.Click
+        My.Forms.rankingTable.Show()
+        Me.Close()
+    End Sub
 End Class

@@ -24,6 +24,7 @@ Partial Class Form_menu
     Private Sub InitializeComponent()
         Me.btn_begin = New System.Windows.Forms.Button()
         Me.btn_leave = New System.Windows.Forms.Button()
+        Me.ranking = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'btn_begin
@@ -37,18 +38,28 @@ Partial Class Form_menu
         '
         'btn_leave
         '
-        Me.btn_leave.Location = New System.Drawing.Point(42, 163)
+        Me.btn_leave.Location = New System.Drawing.Point(43, 211)
         Me.btn_leave.Name = "btn_leave"
         Me.btn_leave.Size = New System.Drawing.Size(192, 73)
         Me.btn_leave.TabIndex = 1
         Me.btn_leave.Text = "Quitter"
         Me.btn_leave.UseVisualStyleBackColor = True
         '
+        'ranking
+        '
+        Me.ranking.Location = New System.Drawing.Point(42, 132)
+        Me.ranking.Name = "ranking"
+        Me.ranking.Size = New System.Drawing.Size(192, 73)
+        Me.ranking.TabIndex = 2
+        Me.ranking.Text = "Classement"
+        Me.ranking.UseVisualStyleBackColor = True
+        '
         'Form_menu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(284, 262)
+        Me.ClientSize = New System.Drawing.Size(284, 298)
+        Me.Controls.Add(Me.ranking)
         Me.Controls.Add(Me.btn_leave)
         Me.Controls.Add(Me.btn_begin)
         Me.Name = "Form_menu"
@@ -58,5 +69,5 @@ Partial Class Form_menu
     End Sub
     Friend WithEvents btn_begin As System.Windows.Forms.Button
     Friend WithEvents btn_leave As System.Windows.Forms.Button
-
+    Friend WithEvents ranking As Button
 End Class

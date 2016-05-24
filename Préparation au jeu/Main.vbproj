@@ -126,6 +126,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="rankingTable.Designer.vb">
+      <DependentUpon>rankingTable.vb</DependentUpon>
+    </Compile>
+    <Compile Include="rankingTable.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="User.vb" />
     <Compile Include="Welcome.Designer.vb">
       <DependentUpon>Welcome.vb</DependentUpon>
@@ -152,6 +158,9 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="rankingTable.resx">
+      <DependentUpon>rankingTable.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Welcome.resx">
       <DependentUpon>Welcome.vb</DependentUpon>

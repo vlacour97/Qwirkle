@@ -48,6 +48,16 @@
         'Affichage Vainqueur 
         Message.Text = "Le joueur qui a gagné est " & userListByScore(0).getName() & " ! Bravo !"
 
+        'Sauvegarde du meilleur joueur
+        Try
+            Dim file As System.IO.StreamWriter
+            file = My.Computer.FileSystem.OpenTextFileWriter("datas/bestPlayers.txt", True)
+            file.WriteLine(userListByScore(0).getName & "_" & userListByScore(0).getAge & "_" & userListByScore(0).getNbPoints)
+            file.Close()
+        Catch ex As Exception
+            MsgBox("Erreur lors de la sauvegarde du meilleur joueur")
+        End Try
+
     End Sub
 
     Function organizeUserByScore() As User()
