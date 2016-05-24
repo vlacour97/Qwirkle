@@ -41,6 +41,10 @@
         Return deckArray
     End Function
 
+    Sub setDeckArray(ByVal array() As Integer)
+        deckArray = array
+    End Sub
+
     Sub setSizeBestDeck(ByVal size As Integer)
         sizeBestDeck = size
     End Sub

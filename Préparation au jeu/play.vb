@@ -4,6 +4,7 @@
     Dim nb_player As Integer
     Dim pick As Pick
     Dim DropZoneCounter As Integer = 0
+    Dim activeUser As User
 
     Private Sub Form_Partie_Load(sender As Object, e As EventArgs) Handles Me.Load
         users = My.Forms.Form_Begin.getUsers()
@@ -17,9 +18,10 @@
         For Each user In users
             user.generateDeck(pick)
         Next
-        MsgBox(users(0).getName & " commence la partie !")
-        updateLblData(users(0))
-        showDeck(users(0))
+        activeUser = users(0)
+        MsgBox(activeUser.getName & " commence la partie !")
+        updateLblData(activeUser)
+        showDeck(activeUser)
     End Sub
 
     Sub updateLblData(ByVal user As User)
@@ -56,18 +58,13 @@
     End Sub
 
     Private Sub dropzone_DragDrop(sender As Object, e As DragEventArgs) Handles dropzone.DragDrop
-        If (combinaisonWasAutorised()) Then
-            sender.Image = e.Data.GetData(DataFormats.Bitmap)
-            sender.allowDrop = False
-            createDropzones(sender)
-        Else
-            MsgBox("La combinaison n'est pas bonne !")
-        End If
-
+        sender.Image = e.Data.GetData(DataFormats.Bitmap)
+        sender.allowDrop = False
+        createDropzones(sender)
     End Sub
 
     Private Sub dropzone_DragEnter(sender As Object, e As DragEventArgs) Handles dropzone.DragEnter
-        If e.Data.GetDataPresent(DataFormats.Bitmap) Then
+        If e.Data.GetDataPresent(DataFormats.Bitmap) And combinaisonWasAutorised() Then
             e.Effect = DragDropEffects.Move
         Else
             e.Effect = DragDropEffects.None
@@ -159,7 +156,35 @@
         Return True
     End Function
 
+    'Pioche de tuiles
     Private Sub picbox_reserve_Click(sender As Object, e As EventArgs) Handles picbox_reserve.Click
-        MsgBox("eeee")
+
     End Sub
+
+    'Echange de tuiles
+    Private Sub picbox_switch_Click(sender As Object, e As EventArgs) Handles picbox_switch.Click
+        My.Forms.Form_Switch.setActiveUser(activeUser)
+        My.Forms.Form_Switch.setPick(pick)
+        blockDeck(True)
+        My.Forms.Form_Switch.Show()
+    End Sub
+
+    Sub blockDeck(ByVal bool As Boolean)
+        If (bool) Then
+            PictureBox1.Enabled = False
+            PictureBox2.Enabled = False
+            PictureBox3.Enabled = False
+            PictureBox4.Enabled = False
+            PictureBox5.Enabled = False
+            PictureBox6.Enabled = False
+        Else
+            PictureBox1.Enabled = True
+            PictureBox2.Enabled = True
+            PictureBox3.Enabled = True
+            PictureBox4.Enabled = True
+            PictureBox5.Enabled = True
+            PictureBox6.Enabled = True
+        End If
+    End Sub
+
 End Class

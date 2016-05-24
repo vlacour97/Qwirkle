@@ -19,7 +19,9 @@
     End Sub
 
     Function getToken(ByVal id As Integer) As Integer
-        Return tokens(id)
+        Dim value As Integer = tokens(id)
+        tokens(id) = Nothing
+        Return value
     End Function
 
     Function isEmpty() As Boolean
@@ -31,5 +33,18 @@
         Next
         Return response
     End Function
+
+    Sub DropTokenInPick(ByVal tokensArray() As Integer)
+        Dim counter As Integer = 0
+        For i As Integer = 0 To tokens.Length
+            If (tokens(i) = 0) Then
+                tokens(i) = tokensArray(counter)
+                counter = counter + 1
+            End If
+            If (counter = tokensArray.Length) Then
+                Exit For
+            End If
+        Next
+    End Sub
 
 End Class
