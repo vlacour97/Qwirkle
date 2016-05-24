@@ -1,5 +1,9 @@
 ﻿Public Class Form_Partie
 
+    'TODO Verification de la combinaison
+    'TODO Modification du nombre de points
+    'TODO Vérification de fin de partie
+
     Dim users(3) As User
     Dim nb_player As Integer
     Dim pick As Pick
@@ -60,6 +64,7 @@
             rep = sender.DoDragDrop(sender.Image, DragDropEffects.Move)
             If rep = DragDropEffects.Move Then
                 sender.Image = Nothing
+                updateDeck()
             End If
         Catch ex As Exception
 
@@ -71,7 +76,6 @@
         sender.Image = e.Data.GetData(DataFormats.Bitmap)
         sender.allowDrop = False
         createDropzones(sender)
-        'TODO mettre à jour le deck du joueur
     End Sub
 
     Private Sub dropzone_DragEnter(sender As Object, e As DragEventArgs) Handles dropzone.DragEnter
@@ -190,14 +194,12 @@
 
     'Pioche de tuiles
     Private Sub picbox_reserve_Click(sender As Object, e As EventArgs) Handles picbox_reserve.Click
-        updateDeck()
         activeUser.dipIntoPick(pick)
         showDeck(activeUser)
     End Sub
 
     'Echange de tuiles
     Private Sub picbox_switch_Click(sender As Object, e As EventArgs) Handles picbox_switch.Click
-        updateDeck()
         My.Forms.Form_Switch.setActiveUser(activeUser)
         My.Forms.Form_Switch.setPick(pick)
         blockDeck(True)
@@ -223,7 +225,6 @@
     End Sub
 
     Private Sub picbox_past_Click(sender As Object, e As EventArgs) Handles picbox_past.Click
-        updateDeck()
         changePlayer()
     End Sub
 End Class

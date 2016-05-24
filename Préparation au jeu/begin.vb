@@ -274,6 +274,7 @@
     Private Sub btn_play_Click(sender As Object, e As EventArgs) Handles btn_play.Click
         If (sender.Tag = True) Then
             My.Forms.Form_Partie.Show()
+            Me.Close()
         End If
     End Sub
 End Class

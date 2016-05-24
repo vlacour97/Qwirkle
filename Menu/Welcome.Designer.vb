@@ -52,7 +52,7 @@ Partial Class Form_menu
         Me.Controls.Add(Me.btn_leave)
         Me.Controls.Add(Me.btn_begin)
         Me.Name = "Form_menu"
-        Me.Text = "Quirckle"
+        Me.Text = "Qwirkle"
         Me.ResumeLayout(False)
 
     End Sub

@@ -13,6 +13,10 @@
         sizeBestDeck = 0
     End Sub
 
+    Sub setNbPoints(ByVal nbPoints As Integer)
+        nb_points = nbPoints
+    End Sub
+
     Function getAge() As Integer
         Return age
     End Function
