@@ -53,6 +53,27 @@
         Return sizeBestDeck
     End Function
 
+    Sub deleteToken(ByVal id As Integer)
+        For i As Integer = 0 To deckArray.Length - 1
+            If (deckArray(i) = id) Then
+                deckArray(i) = 0
+                Exit For
+            End If
+        Next
+    End Sub
+
+    Sub dipIntoPick(ByRef pick)
+        Dim tokenId As Integer
+        For i As Integer = 0 To deckArray.Length - 1
+            If (Not pick.isEmpty And deckArray(i) = 0) Then
+                Do
+                    tokenId = CInt(107 * Rnd() + 1)
+                    deckArray(i) = pick.getToken(tokenId)
+                Loop Until Not IsNothing(pick.getToken(tokenId))
+            End If
+        Next
+    End Sub
+
     Function getTokenName(ByVal tokenCode As Integer)
         Dim color As String
         Dim form As String

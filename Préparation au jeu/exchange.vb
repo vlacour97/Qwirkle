@@ -33,6 +33,7 @@
     End Sub
 
     Private Sub btn_cancel_Click(sender As Object, e As EventArgs) Handles btn_cancel.Click
+        My.Forms.Form_Partie.blockDeck(False)
         Me.Close()
     End Sub
 

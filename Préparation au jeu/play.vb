@@ -5,6 +5,7 @@
     Dim pick As Pick
     Dim DropZoneCounter As Integer = 0
     Dim activeUser As User
+    Dim nb_tour As Integer
 
     Private Sub Form_Partie_Load(sender As Object, e As EventArgs) Handles Me.Load
         users = My.Forms.Form_Begin.getUsers()
@@ -18,15 +19,24 @@
         For Each user In users
             user.generateDeck(pick)
         Next
-        activeUser = users(0)
-        MsgBox(activeUser.getName & " commence la partie !")
-        updateLblData(activeUser)
-        showDeck(activeUser)
+        changePlayer()
     End Sub
 
     Sub updateLblData(ByVal user As User)
         lbl_name_player.Text = "Joueur : " & user.getName
         lbl_score.Text = "Score : " & user.getNbPoints
+    End Sub
+
+    Sub changePlayer()
+        activeUser = users(nb_tour Mod nb_player)
+        If (nb_tour = 0) Then
+            MsgBox(activeUser.getName & " commence la partie !")
+        Else
+            MsgBox("Au tour de " & activeUser.getName)
+        End If
+        updateLblData(activeUser)
+        showDeck(activeUser)
+        nb_tour = nb_tour + 1
     End Sub
 
     Sub showDeck(ByVal user As User)
@@ -37,11 +47,11 @@
         PictureBox5.Image = My.Resources.ResourceManager.GetObject(user.getTokenName(user.getDeckArray(4)))
         PictureBox6.Image = My.Resources.ResourceManager.GetObject(user.getTokenName(user.getDeckArray(5)))
         PictureBox1.Tag = user.getDeckArray(0)
-        PictureBox1.Tag = user.getDeckArray(1)
-        PictureBox1.Tag = user.getDeckArray(2)
-        PictureBox1.Tag = user.getDeckArray(3)
-        PictureBox1.Tag = user.getDeckArray(4)
-        PictureBox1.Tag = user.getDeckArray(5)
+        PictureBox2.Tag = user.getDeckArray(1)
+        PictureBox3.Tag = user.getDeckArray(2)
+        PictureBox4.Tag = user.getDeckArray(3)
+        PictureBox5.Tag = user.getDeckArray(4)
+        PictureBox6.Tag = user.getDeckArray(5)
     End Sub
 
     Private Sub PictureBox1_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox1.MouseMove, PictureBox2.MouseMove, PictureBox3.MouseMove, PictureBox4.MouseMove, PictureBox5.MouseMove, PictureBox6.MouseMove
@@ -61,6 +71,7 @@
         sender.Image = e.Data.GetData(DataFormats.Bitmap)
         sender.allowDrop = False
         createDropzones(sender)
+        'TODO mettre à jour le deck du joueur
     End Sub
 
     Private Sub dropzone_DragEnter(sender As Object, e As DragEventArgs) Handles dropzone.DragEnter
@@ -156,13 +167,37 @@
         Return True
     End Function
 
+    Sub updateDeck()
+        If (IsNothing(PictureBox1.Image)) Then
+            activeUser.deleteToken(PictureBox1.Tag)
+        End If
+        If (IsNothing(PictureBox2.Image)) Then
+            activeUser.deleteToken(PictureBox2.Tag)
+        End If
+        If (IsNothing(PictureBox3.Image)) Then
+            activeUser.deleteToken(PictureBox3.Tag)
+        End If
+        If (IsNothing(PictureBox4.Image)) Then
+            activeUser.deleteToken(PictureBox4.Tag)
+        End If
+        If (IsNothing(PictureBox5.Image)) Then
+            activeUser.deleteToken(PictureBox5.Tag)
+        End If
+        If (IsNothing(PictureBox6.Image)) Then
+            activeUser.deleteToken(PictureBox6.Tag)
+        End If
+    End Sub
+
     'Pioche de tuiles
     Private Sub picbox_reserve_Click(sender As Object, e As EventArgs) Handles picbox_reserve.Click
-
+        updateDeck()
+        activeUser.dipIntoPick(pick)
+        showDeck(activeUser)
     End Sub
 
     'Echange de tuiles
     Private Sub picbox_switch_Click(sender As Object, e As EventArgs) Handles picbox_switch.Click
+        updateDeck()
         My.Forms.Form_Switch.setActiveUser(activeUser)
         My.Forms.Form_Switch.setPick(pick)
         blockDeck(True)
@@ -187,4 +222,8 @@
         End If
     End Sub
 
+    Private Sub picbox_past_Click(sender As Object, e As EventArgs) Handles picbox_past.Click
+        updateDeck()
+        changePlayer()
+    End Sub
 End Class

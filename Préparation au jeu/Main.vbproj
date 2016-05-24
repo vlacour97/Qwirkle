@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <StartupObject>Préparation_au_jeu.My.MyApplication</StartupObject>
     <RootNamespace>Préparation_au_jeu</RootNamespace>
-    <AssemblyName>Préparation au jeu</AssemblyName>
+    <AssemblyName>Qwirkle</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -20,7 +20,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Préparation au jeu.xml</DocumentationFile>
+    <DocumentationFile>Qwirkle.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -30,7 +30,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Préparation au jeu.xml</DocumentationFile>
+    <DocumentationFile>Qwirkle.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
