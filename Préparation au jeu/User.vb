@@ -32,11 +32,12 @@
     Sub generateDeck(ByRef pick)
         Dim tokenId As Integer
         For counter As Integer = 0 To deckArray.Length - 1
-            If (Not pick.isEmpty) Then
-                Do
-                    tokenId = CInt(106 * Rnd() + 1)
+            Dim pickIsEmpty As Boolean = pick.isEmpty
+            If (Not pickIsEmpty) Then
+                While (deckArray(counter) = 0 And Not pickIsEmpty)
+                    tokenId = CInt(107 * Rnd())
                     deckArray(counter) = pick.getToken(tokenId)
-                Loop Until Not IsNothing(pick.getToken(tokenId))
+                End While
             End If
         Next
     End Sub
@@ -66,14 +67,25 @@
         Next
     End Sub
 
+    Function deckIsEmpty() As Boolean
+        Dim response As Boolean = True
+        For Each token In deckArray
+            If (Not IsNothing(token)) Then
+                response = False
+            End If
+        Next
+        Return response
+    End Function
+
     Sub dipIntoPick(ByRef pick)
         Dim tokenId As Integer
         For i As Integer = 0 To deckArray.Length - 1
-            If (Not pick.isEmpty And deckArray(i) = 0) Then
-                Do
-                    tokenId = CInt(107 * Rnd() + 1)
+            Dim pickIsEmpty As Boolean = pick.isEmpty
+            If (Not pickIsEmpty And deckArray(i) = 0) Then
+                While (deckArray(i) = 0 And Not pickIsEmpty)
+                    tokenId = CInt(107 * Rnd())
                     deckArray(i) = pick.getToken(tokenId)
-                Loop Until Not IsNothing(pick.getToken(tokenId))
+                End While
             End If
         Next
     End Sub

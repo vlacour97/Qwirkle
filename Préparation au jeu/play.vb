@@ -76,7 +76,24 @@
         sender.Image = e.Data.GetData(DataFormats.Bitmap)
         sender.allowDrop = False
         createDropzones(sender)
+        If (allDeckIsEmpty()) Then
+            MsgBox("Fin de la partie !")
+            My.Forms.Form_End.Show()
+            Me.Close()
+        End If
     End Sub
+
+    Function allDeckIsEmpty() As Boolean
+        If (Not pick.isEmpty) Then
+            Return False
+        End If
+        For Each user In users
+            If (Not user.deckIsEmpty) Then
+                Return False
+            End If
+        Next
+        Return True
+    End Function
 
     Private Sub dropzone_DragEnter(sender As Object, e As DragEventArgs) Handles dropzone.DragEnter
         If e.Data.GetDataPresent(DataFormats.Bitmap) And combinaisonWasAutorised() Then

@@ -25,13 +25,12 @@
     End Function
 
     Function isEmpty() As Boolean
-        Dim response As Boolean = True
         For Each token As Boolean In tokens
             If (Not IsNothing(token)) Then
-                response = False
+                Return False
             End If
         Next
-        Return response
+        Return True
     End Function
 
     Sub DropTokenInPick(ByVal tokensArray() As Integer)

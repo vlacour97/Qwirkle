@@ -117,11 +117,12 @@
         Dim response(5) As Integer
         Dim tokenId As Integer
         For i As Integer = 0 To size - 1
-            If (Not pick.isEmpty) Then
-                Do
-                    tokenId = CInt(106 * Rnd() + 1)
+            Dim pickIsEmpty As Boolean = pick.isEmpty
+            If (Not pickIsEmpty) Then
+                While (response(i) = 0 And Not pickIsEmpty)
+                    tokenId = CInt(107 * Rnd())
                     response(i) = pick.getToken(tokenId)
-                Loop Until Not IsNothing(pick.getToken(tokenId))
+                End While
             End If
         Next
         Return response
