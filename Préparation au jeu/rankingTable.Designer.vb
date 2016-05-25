@@ -33,50 +33,54 @@ Partial Class rankingTable
         Me.rank.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.rank.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.rank.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.rank.Location = New System.Drawing.Point(26, 67)
+        Me.rank.Location = New System.Drawing.Point(52, 129)
+        Me.rank.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.rank.Name = "rank"
         Me.rank.RowCount = 11
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.rank.Size = New System.Drawing.Size(682, 460)
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 9.090908!))
+        Me.rank.Size = New System.Drawing.Size(1364, 885)
         Me.rank.TabIndex = 0
         '
         'lbl_description
         '
         Me.lbl_description.AutoSize = True
         Me.lbl_description.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_description.Location = New System.Drawing.Point(198, 20)
+        Me.lbl_description.Location = New System.Drawing.Point(396, 38)
+        Me.lbl_description.Margin = New System.Windows.Forms.Padding(6, 0, 6, 0)
         Me.lbl_description.Name = "lbl_description"
-        Me.lbl_description.Size = New System.Drawing.Size(331, 25)
+        Me.lbl_description.Size = New System.Drawing.Size(673, 46)
         Me.lbl_description.TabIndex = 1
         Me.lbl_description.Text = "Classement des 10 meilleurs joueurs"
         '
         'Back
         '
-        Me.Back.Location = New System.Drawing.Point(230, 533)
+        Me.Back.Location = New System.Drawing.Point(460, 1025)
+        Me.Back.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.Back.Name = "Back"
-        Me.Back.Size = New System.Drawing.Size(247, 38)
+        Me.Back.Size = New System.Drawing.Size(494, 73)
         Me.Back.TabIndex = 2
         Me.Back.Text = "Retour"
         Me.Back.UseVisualStyleBackColor = True
         '
         'rankingTable
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(12.0!, 25.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(747, 599)
+        Me.ClientSize = New System.Drawing.Size(1494, 1152)
         Me.Controls.Add(Me.Back)
         Me.Controls.Add(Me.lbl_description)
         Me.Controls.Add(Me.rank)
+        Me.Margin = New System.Windows.Forms.Padding(6, 6, 6, 6)
         Me.Name = "rankingTable"
         Me.Text = "rankingTable"
         Me.ResumeLayout(False)

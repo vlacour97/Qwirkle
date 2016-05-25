@@ -7,7 +7,7 @@ Public Class rankingTable
     Dim nb_player As Integer
 
     Private Sub rankingTable_Load(sender As Object, e As EventArgs) Handles Me.Load
-        Dim sr As StreamReader = New StreamReader("datas/bestPlayers.txt")
+        Dim sr As StreamReader = New StreamReader("../../Resources/datas/bestPlayers.txt")
         Dim line As String
         Do
             ReDim Preserve users(nb_player)
@@ -60,6 +60,9 @@ Public Class rankingTable
                 .AutoSize = True
             End With
             rank.Controls.Add(lbl2, 2, countLine + 1)
+            If (countLine = 9) Then
+                Exit For
+            End If
         Next
 
     End Sub
@@ -98,10 +101,12 @@ Public Class rankingTable
     End Sub
 
     Function organizeUserByScore() As User()
-        Dim usersTemp(3) As User
-        Dim response(3) As User
+        Dim usersTemp(users.Length) As User
+        Dim response(users.Length) As User
         For counter As Integer = 0 To users.Length - 1
-            usersTemp(counter) = users(counter)
+            If (Not IsNothing(users(counter))) Then
+                usersTemp(counter) = users(counter)
+            End If
         Next
         Dim tempUser As User
         For counter As Integer = 0 To users.Length - 1
