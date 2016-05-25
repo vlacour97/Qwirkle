@@ -34,7 +34,7 @@
         For counter As Integer = 0 To deckArray.Length - 1
             If (Not pick.isEmpty) Then
                 Do
-                    tokenId = CInt(107 * Rnd() + 1)
+                    tokenId = CInt(106 * Rnd() + 1)
                     deckArray(counter) = pick.getToken(tokenId)
                 Loop Until Not IsNothing(pick.getToken(tokenId))
             End If
