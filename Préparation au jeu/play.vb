@@ -11,6 +11,11 @@
     Dim activeUser As User
     Dim nb_tour As Integer
 
+    Private Structure dragPictBoxInfo
+        Dim img As Image
+        Dim tag As Object
+    End Structure
+
     Private Sub Form_Partie_Load(sender As Object, e As EventArgs) Handles Me.Load
         users = My.Forms.Form_Begin.getUsers()
         nb_player = My.Forms.Form_Begin.getNbPlayer()
@@ -24,11 +29,14 @@
             user.generateDeck(pick)
         Next
         changePlayer()
+
+        'Methode de test
+        pick.ClearPick()
     End Sub
 
-    Sub updateLblData(ByVal user As User)
-        lbl_name_player.Text = "Joueur : " & user.getName
-        lbl_score.Text = "Score : " & user.getNbPoints
+    Sub updateLblData()
+        lbl_name_player.Text = "Joueur : " & activeUser.getName
+        lbl_score.Text = "Score : " & activeUser.getNbPoints
     End Sub
 
     Sub changePlayer()
@@ -38,7 +46,7 @@
         Else
             MsgBox("Au tour de " & activeUser.getName)
         End If
-        updateLblData(activeUser)
+        updateLblData()
         showDeck(activeUser)
         nb_tour = nb_tour + 1
     End Sub
@@ -58,10 +66,11 @@
         PictureBox6.Tag = user.getDeckArray(5)
     End Sub
 
+
     Private Sub PictureBox1_MouseMove(sender As Object, e As MouseEventArgs) Handles PictureBox1.MouseMove, PictureBox2.MouseMove, PictureBox3.MouseMove, PictureBox4.MouseMove, PictureBox5.MouseMove, PictureBox6.MouseMove
         Dim rep As DragDropEffects
         Try
-            rep = sender.DoDragDrop(sender.Image, DragDropEffects.Move)
+            rep = sender.DoDragDrop(New dragPictBoxInfo With {.img = sender.Image, .tag = sender.Tag}, DragDropEffects.Move)
             If rep = DragDropEffects.Move Then
                 sender.Image = Nothing
                 updateDeck()
@@ -73,13 +82,15 @@
     End Sub
 
     Private Sub dropzone_DragDrop(sender As Object, e As DragEventArgs) Handles dropzone.DragDrop
-        sender.Image = e.Data.GetData(DataFormats.Bitmap)
-        sender.allowDrop = False
-        createDropzones(sender)
-        If (allDeckIsEmpty()) Then
-            MsgBox("Fin de la partie !")
-            My.Forms.Form_End.Show()
-            Me.Close()
+        Dim datas As dragPictBoxInfo = e.Data.GetData(GetType(dragPictBoxInfo))
+        If (combinaisonWasAutorised(sender, datas.tag) Or sender.Equals(dropzone)) Then
+            sender.Image = datas.img
+            sender.Tag = datas.tag
+            sender.allowDrop = False
+            createDropzones(sender)
+            AddPointToActiveUser(1)
+        Else
+            'Annuler un drag&drop
         End If
     End Sub
 
@@ -87,8 +98,8 @@
         If (Not pick.isEmpty) Then
             Return False
         End If
-        For Each user In users
-            If (Not user.deckIsEmpty) Then
+        For i As Integer = 0 To nb_player - 1
+            If (Not users(i).deckIsEmpty) Then
                 Return False
             End If
         Next
@@ -96,7 +107,7 @@
     End Function
 
     Private Sub dropzone_DragEnter(sender As Object, e As DragEventArgs) Handles dropzone.DragEnter
-        If e.Data.GetDataPresent(DataFormats.Bitmap) And combinaisonWasAutorised() Then
+        If e.Data.GetDataPresent(GetType(dragPictBoxInfo)) Then
             e.Effect = DragDropEffects.Move
         Else
             e.Effect = DragDropEffects.None
@@ -184,8 +195,81 @@
         Return False
     End Function
 
-    Function combinaisonWasAutorised() As Boolean
-        Return True
+    Function combinaisonWasAutorised(ByVal picBoxWasDroped As PictureBox, ByVal picBoxTag As Integer) As Boolean
+        Dim counterLine As Integer = 0
+        Dim counterColumn As Integer = 0
+        Dim checkingLine As Boolean = False
+        Dim checkingColumn As Boolean = False
+
+        For Each picBox In Panel1.Controls
+            If (picBox.Top = picBoxWasDroped.Top Or picBoxWasDroped.Left = picBoxWasDroped.Left) Then
+                'Balayage lignes
+                If (picBox.Top = picBoxWasDroped.Top) Then
+                    'Balayage Gauche
+                    For n As Integer = 1 To 10
+                        If (picBox.Left = picBoxWasDroped.Left - (n * dropzone.Width)) Then
+                            'Meme couleur ou même forme
+                            If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
+                                checkingLine = True
+                                counterLine += 1
+                            Else
+                                Exit For
+                            End If
+                        End If
+                    Next
+                    'Balayage Droit
+                    For n As Integer = 1 To 10
+                        If (picBox.Left = picBoxWasDroped.Left + (n * dropzone.Width)) Then
+                            'Meme couleur ou même forme
+                            If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
+                                checkingLine = True
+                                counterLine += 1
+                            Else
+                                Exit For
+                            End If
+                        End If
+                    Next
+                End If
+
+
+                'Balayage Colonnes
+                If (picBox.Left = picBoxWasDroped.Left) Then
+                    'Balayage Haut
+                    For n As Integer = 1 To 10
+                        If (picBox.Left = picBoxWasDroped.Top - (n * dropzone.Height)) Then
+                            'Meme couleur ou même forme
+                            If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
+                                checkingColumn = True
+                                counterColumn += 1
+                            Else
+                                Exit For
+                            End If
+                        End If
+                    Next
+                    'Balayage Bas
+                    For n As Integer = 1 To 10
+                        If (picBox.Left = picBoxWasDroped.Top + (n * dropzone.Height)) Then
+                            'Meme couleur ou même forme
+                            If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
+                                checkingColumn = True
+                                counterColumn += 1
+                            Else
+                                Exit For
+                            End If
+                        End If
+                    Next
+                End If
+
+            End If
+        Next
+
+        If (checkingLine And checkingColumn) Then
+            AddPointToActiveUser(2)
+        ElseIf (checkingColumn Or checkingLine)
+            AddPointToActiveUser(1)
+        End If
+
+        Return (checkingLine Or checkingColumn) Or (checkingColumn And checkingLine)
     End Function
 
     Sub updateDeck()
@@ -241,7 +325,19 @@
         End If
     End Sub
 
+    Sub AddPointToActiveUser(ByVal nb_points As Integer)
+        activeUser.AddPoints(nb_points)
+        updateLblData()
+    End Sub
+
     Private Sub picbox_past_Click(sender As Object, e As EventArgs) Handles picbox_past.Click
-        changePlayer()
+        If (allDeckIsEmpty()) Then
+            AddPointToActiveUser(6)
+            MsgBox("Fin de la partie !")
+            My.Forms.Form_End.Show()
+            Me.Close()
+        Else
+            changePlayer()
+        End If
     End Sub
 End Class

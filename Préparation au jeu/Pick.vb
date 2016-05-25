@@ -25,12 +25,28 @@
     End Function
 
     Function isEmpty() As Boolean
-        For Each token As Boolean In tokens
-            If (Not IsNothing(token)) Then
+        For Each token As Integer In tokens
+            If (Not (token = 0)) Then
                 Return False
             End If
         Next
         Return True
+    End Function
+
+    Function tokenInSameColor(ByVal token1 As Integer, ByVal token2 As Integer)
+        If (Math.Truncate(token1 / 10) = Math.Truncate(token2 / 10)) Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    Function tokenInSameForm(ByVal token1 As Integer, ByVal token2 As Integer)
+        If (token1 Mod 10 = token2 Mod 10) Then
+            Return True
+        Else
+            Return False
+        End If
     End Function
 
     Sub DropTokenInPick(ByVal tokensArray() As Integer)
@@ -43,6 +59,12 @@
             If (counter = tokensArray.Length) Then
                 Exit For
             End If
+        Next
+    End Sub
+
+    Sub ClearPick()
+        For i As Integer = 0 To tokens.Length - 1
+            tokens(i) = 0
         Next
     End Sub
 

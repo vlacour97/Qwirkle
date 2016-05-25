@@ -16,10 +16,6 @@
     Private Sub Form_End_Load(sender As Object, e As EventArgs) Handles Me.Load
         nb_player = My.Forms.Form_Begin.getNbPlayer()
         users = My.Forms.Form_Begin.getUsers()
-        users(0) = New User("Antoine", 19)
-        users(1) = New User("Valentin", 15)
-        users(0).setNbPoints(12)
-        users(1).setNbPoints(19)
 
         'Trie des joueurs
         Dim userListByScore(3) As User

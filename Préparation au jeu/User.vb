@@ -70,12 +70,16 @@
     Function deckIsEmpty() As Boolean
         Dim response As Boolean = True
         For Each token In deckArray
-            If (Not IsNothing(token)) Then
+            If (Not (token = 0)) Then
                 response = False
             End If
         Next
         Return response
     End Function
+
+    Sub AddPoints(ByVal nb_point As Integer)
+        nb_points += nb_point
+    End Sub
 
     Sub dipIntoPick(ByRef pick)
         Dim tokenId As Integer
