@@ -6,6 +6,9 @@
     Dim activeUser As User
     Dim nb_tour As Integer
 
+    'TODO Vérification de lignes 
+    'TODO Annulation de drop
+
     Private Structure dragPictBoxInfo
         Dim img As Image
         Dim tag As Object
@@ -242,14 +245,14 @@
             End If
         Next
 
-        If (InIntegerArray(2, checkingArround) = 0) Then
+        If (InIntegerArray(2, checkingArround) = 0 Or InIntegerArray(0, checkingArround) > 0) Then
             'Revois Faux
             Return False
         Else
-            If (InIntegerArray(2, checkingArround) = 1) Then
+            If (InIntegerArray(2, checkingArround) = 1 And InIntegerArray(0, checkingArround) = 0) Then
                 'Revois Vrai + 1 point
                 AddPointToActiveUser(1)
-            ElseIf (InIntegerArray(2, checkingArround) > 1)
+            ElseIf (InIntegerArray(2, checkingArround) > 1 And InIntegerArray(0, checkingArround) = 0)
                 'Revois Vrai + 2 point
                 AddPointToActiveUser(2)
             End If
@@ -333,6 +336,7 @@
             My.Forms.Form_End.Show()
             Me.Close()
         Else
+            activeUser.dipIntoPick(pick)
             changePlayer()
         End If
     End Sub
