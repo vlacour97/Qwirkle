@@ -79,11 +79,13 @@
     Private Sub dropzone_DragDrop(sender As Object, e As DragEventArgs) Handles dropzone.DragDrop
         Dim datas As dragPictBoxInfo = e.Data.GetData(GetType(dragPictBoxInfo))
         If (combinaisonWasAutorised(sender, datas.tag) Or sender.Equals(dropzone)) Then
+            If (sender.Equals(dropzone)) Then
+                AddPointToActiveUser(1)
+            End If
             sender.Image = datas.img
             sender.Tag = datas.tag
             sender.allowDrop = False
             createDropzones(sender)
-            AddPointToActiveUser(1)
         Else
             'Annuler un drag&drop
         End If
@@ -187,82 +189,83 @@
     End Function
 
     Function combinaisonWasAutorised(ByVal picBoxWasDroped As PictureBox, ByVal picBoxTag As Integer) As Boolean
-        Dim counterLine As Integer = 0
-        Dim counterColumn As Integer = 0
-        Dim checkingLine As Boolean = False
-        Dim checkingColumn As Boolean = False
+
+
+        Dim checkingArround() As Integer = {3, 3, 3, 3}
 
         For Each picBox In Panel1.Controls
-            If (picBox.Top = picBoxWasDroped.Top Or picBoxWasDroped.Left = picBoxWasDroped.Left) Then
-                'Balayage lignes
-                If (picBox.Top = picBoxWasDroped.Top) Then
-                    'Balayage Gauche
-                    For n As Integer = 1 To Panel1.Controls.Count
-                        If (picBox.Left = picBoxWasDroped.Left - (n * dropzone.Width)) Then
-                            'Meme couleur ou même forme
-                            If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
-                                checkingLine = True
-                                counterLine += 1
-                            Else
-                                Exit For
-                            End If
-                        End If
-                    Next
-                    'Balayage Droit
-                    For n As Integer = 1 To Panel1.Controls.Count
-                        If (picBox.Left = picBoxWasDroped.Left + (n * dropzone.Width)) Then
-                            'Meme couleur ou même forme
-                            If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
-                                checkingLine = True
-                                counterLine += 1
-                            Else
-                                Exit For
-                            End If
-                        End If
-                    Next
+            'Verification Ligne
+            If (picBoxWasDroped.Top = picBox.Top) Then
+                If (picBox.Left = picBoxWasDroped.Left - dropzone.Width) Then
+                    'Verification gauche
+                    If (IsNothing(picBox.Tag)) Then
+                        checkingArround(0) = 1
+                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag))
+                        checkingArround(0) = 2
+                    Else
+                        checkingArround(0) = 0
+                    End If
                 End If
-
-
-                'Balayage Colonnes
-                If (picBox.Left = picBoxWasDroped.Left) Then
-                    'Balayage Haut
-                    For n As Integer = 1 To Panel1.Controls.Count
-                        If (picBox.Top = picBoxWasDroped.Top - (n * dropzone.Height)) Then
-                            'Meme couleur ou même forme
-                            If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
-                                checkingColumn = True
-                                counterColumn += 1
-                            Else
-                                Exit For
-                            End If
-                        End If
-                    Next
-                    'Balayage Bas
-                    For n As Integer = 1 To Panel1.Controls.Count
-                        If (picBox.Top = picBoxWasDroped.Top + (n * dropzone.Height)) Then
-                            'Meme couleur ou même forme
-                            If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
-                                checkingColumn = True
-                                counterColumn += 1
-                            Else
-                                Exit For
-                            End If
-                        End If
-                    Next
+                If (picBox.Left = picBoxWasDroped.Left + dropzone.Width) Then
+                    'Verification droite
+                    If (IsNothing(picBox.Tag)) Then
+                        checkingArround(1) = 1
+                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag))
+                        checkingArround(1) = 2
+                    Else
+                        checkingArround(1) = 0
+                    End If
                 End If
-
+            End If
+            'Verification Colonne
+            If (picBoxWasDroped.Left = picBox.Left) Then
+                If (picBox.Top = picBoxWasDroped.Top - dropzone.Height) Then
+                    'Verification haut
+                    If (IsNothing(picBox.Tag)) Then
+                        checkingArround(2) = 1
+                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag))
+                        checkingArround(2) = 2
+                    Else
+                        checkingArround(2) = 0
+                    End If
+                End If
+                If (picBox.Top = picBoxWasDroped.Top + dropzone.Height) Then
+                    'Verification bas
+                    If (IsNothing(picBox.Tag)) Then
+                        checkingArround(3) = 1
+                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag))
+                        checkingArround(3) = 2
+                    Else
+                        checkingArround(3) = 0
+                    End If
+                End If
             End If
         Next
 
-        If counterColumn = 6 Or counterLine = 6 Then
-            AddPointToActiveUser(6)
-        ElseIf (checkingLine And checkingColumn) Then
-            AddPointToActiveUser(2)
-        ElseIf (checkingColumn Or checkingLine) Then
-            AddPointToActiveUser(1)
+        If (InIntegerArray(2, checkingArround) = 0) Then
+            'Revois Faux
+            Return False
+        Else
+            If (InIntegerArray(2, checkingArround) = 1) Then
+                'Revois Vrai + 1 point
+                AddPointToActiveUser(1)
+            ElseIf (InIntegerArray(2, checkingArround) > 1)
+                'Revois Vrai + 2 point
+                AddPointToActiveUser(2)
+            End If
+            Return True
         End If
 
-        Return (checkingLine Or checkingColumn) Or (checkingColumn And checkingLine)
+    End Function
+
+    Function InIntegerArray(ByVal int As Integer, ByVal array() As Integer) As Integer
+        Dim response As Integer = 0
+        For Each line In array
+            If (line = int) Then
+                response += 1
+            End If
+        Next
+        Return response
     End Function
 
     Sub updateDeck()
