@@ -1,13 +1,8 @@
 ﻿Public Class Form_Partie
 
-    'TODO Verification de la combinaison
-    'TODO Modification du nombre de points
-    'TODO Vérification de fin de partie
-
     Dim users(3) As User
     Dim nb_player As Integer
     Dim pick As Pick
-    Dim DropZoneCounter As Integer = 0
     Dim activeUser As User
     Dim nb_tour As Integer
 
@@ -31,7 +26,7 @@
         changePlayer()
 
         'Methode de test
-        pick.ClearPick()
+        'pick.ClearPick()
     End Sub
 
     Sub updateLblData()
@@ -133,7 +128,7 @@
         newPictureBox4.SizeMode = PictureBoxSizeMode.Zoom
         newPictureBox4.AllowDrop = True
         'Dropzone en dessous
-        newPictureBox1.Name = "dropzone" & DropZoneCounter
+        newPictureBox1.Name = "dropzone" & Panel1.Controls.Count - 1
         newPictureBox1.Visible = True
         newPictureBox1.Top = dropzone.Top + dropzone.Height
         newPictureBox1.Width = dropzone.Width
@@ -141,12 +136,11 @@
         newPictureBox1.Left = dropzone.Left
         If (Not isInTheSamePlace(newPictureBox1)) Then
             Panel1.Controls.Add(newPictureBox1)
-            AddHandler Panel1.Controls.Item(DropZoneCounter).DragDrop, AddressOf dropzone_DragDrop
-            AddHandler Panel1.Controls.Item(DropZoneCounter).DragEnter, AddressOf dropzone_DragEnter
-            DropZoneCounter = DropZoneCounter + 1
+            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragDrop, AddressOf dropzone_DragDrop
+            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragEnter, AddressOf dropzone_DragEnter
         End If
         'Dropzone au dessus
-        newPictureBox2.Name = "dropzone" & DropZoneCounter
+        newPictureBox2.Name = "dropzone" & Panel1.Controls.Count - 1
         newPictureBox2.Visible = True
         newPictureBox2.Top = dropzone.Top - dropzone.Height
         newPictureBox2.Width = dropzone.Width
@@ -154,12 +148,11 @@
         newPictureBox2.Left = dropzone.Left
         If (Not isInTheSamePlace(newPictureBox2)) Then
             Panel1.Controls.Add(newPictureBox2)
-            AddHandler Panel1.Controls.Item(DropZoneCounter).DragDrop, AddressOf dropzone_DragDrop
-            AddHandler Panel1.Controls.Item(DropZoneCounter).DragEnter, AddressOf dropzone_DragEnter
-            DropZoneCounter = DropZoneCounter + 1
+            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragDrop, AddressOf dropzone_DragDrop
+            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragEnter, AddressOf dropzone_DragEnter
         End If
         'Dropzone à droite
-        newPictureBox3.Name = "dropzone" & DropZoneCounter
+        newPictureBox3.Name = "dropzone" & Panel1.Controls.Count - 1
         newPictureBox3.Visible = True
         newPictureBox3.Top = dropzone.Top
         newPictureBox3.Width = dropzone.Width
@@ -167,12 +160,11 @@
         newPictureBox3.Left = dropzone.Left + dropzone.Width
         If (Not isInTheSamePlace(newPictureBox3)) Then
             Panel1.Controls.Add(newPictureBox3)
-            AddHandler Panel1.Controls.Item(DropZoneCounter).DragDrop, AddressOf dropzone_DragDrop
-            AddHandler Panel1.Controls.Item(DropZoneCounter).DragEnter, AddressOf dropzone_DragEnter
-            DropZoneCounter = DropZoneCounter + 1
+            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragDrop, AddressOf dropzone_DragDrop
+            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragEnter, AddressOf dropzone_DragEnter
         End If
         'Dropzone à gauche
-        newPictureBox4.Name = "dropzone" & DropZoneCounter
+        newPictureBox4.Name = "dropzone" & Panel1.Controls.Count - 1
         newPictureBox4.Visible = True
         newPictureBox4.Top = dropzone.Top
         newPictureBox4.Width = dropzone.Width
@@ -180,9 +172,8 @@
         newPictureBox4.Left = dropzone.Left - dropzone.Width
         If (Not isInTheSamePlace(newPictureBox4)) Then
             Panel1.Controls.Add(newPictureBox4)
-            AddHandler Panel1.Controls.Item(DropZoneCounter).DragDrop, AddressOf dropzone_DragDrop
-            AddHandler Panel1.Controls.Item(DropZoneCounter).DragEnter, AddressOf dropzone_DragEnter
-            DropZoneCounter = DropZoneCounter + 1
+            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragDrop, AddressOf dropzone_DragDrop
+            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragEnter, AddressOf dropzone_DragEnter
         End If
     End Sub
 
@@ -206,7 +197,7 @@
                 'Balayage lignes
                 If (picBox.Top = picBoxWasDroped.Top) Then
                     'Balayage Gauche
-                    For n As Integer = 1 To 10
+                    For n As Integer = 1 To Panel1.Controls.Count
                         If (picBox.Left = picBoxWasDroped.Left - (n * dropzone.Width)) Then
                             'Meme couleur ou même forme
                             If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
@@ -218,7 +209,7 @@
                         End If
                     Next
                     'Balayage Droit
-                    For n As Integer = 1 To 10
+                    For n As Integer = 1 To Panel1.Controls.Count
                         If (picBox.Left = picBoxWasDroped.Left + (n * dropzone.Width)) Then
                             'Meme couleur ou même forme
                             If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
@@ -235,8 +226,8 @@
                 'Balayage Colonnes
                 If (picBox.Left = picBoxWasDroped.Left) Then
                     'Balayage Haut
-                    For n As Integer = 1 To 10
-                        If (picBox.Left = picBoxWasDroped.Top - (n * dropzone.Height)) Then
+                    For n As Integer = 1 To Panel1.Controls.Count
+                        If (picBox.Top = picBoxWasDroped.Top - (n * dropzone.Height)) Then
                             'Meme couleur ou même forme
                             If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
                                 checkingColumn = True
@@ -247,8 +238,8 @@
                         End If
                     Next
                     'Balayage Bas
-                    For n As Integer = 1 To 10
-                        If (picBox.Left = picBoxWasDroped.Top + (n * dropzone.Height)) Then
+                    For n As Integer = 1 To Panel1.Controls.Count
+                        If (picBox.Top = picBoxWasDroped.Top + (n * dropzone.Height)) Then
                             'Meme couleur ou même forme
                             If (pick.tokenInSameColor(picBox.tag, picBoxTag) Or pick.tokenInSameForm(picBox.tag, picBoxTag)) Then
                                 checkingColumn = True
@@ -263,9 +254,11 @@
             End If
         Next
 
-        If (checkingLine And checkingColumn) Then
+        If counterColumn = 6 Or counterLine = 6 Then
+            AddPointToActiveUser(6)
+        ElseIf (checkingLine And checkingColumn) Then
             AddPointToActiveUser(2)
-        ElseIf (checkingColumn Or checkingLine)
+        ElseIf (checkingColumn Or checkingLine) Then
             AddPointToActiveUser(1)
         End If
 
