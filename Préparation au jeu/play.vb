@@ -5,9 +5,9 @@
     Dim pick As Pick
     Dim activeUser As User
     Dim nb_tour As Integer
+    Dim nb_points_tour As Integer = 0
 
     'TODO Vérification de lignes 
-    'TODO Annulation de drop
 
     Private Structure dragPictBoxInfo
         Dim img As Image
@@ -19,13 +19,13 @@
         nb_player = My.Forms.Form_Begin.getNbPlayer()
         pick = My.Forms.Form_Begin.getPick()
         dropzone.AllowDrop = True
-        users(0) = New User("Antoine", 19)
-        users(1) = New User("Valentin", 15)
-        users(2) = New User("NC", 0)
-        users(3) = New User("NC", 0)
-        For Each user In users
-            user.generateDeck(pick)
-        Next
+        'users(0) = New User("Antoine", 19)
+        'users(1) = New User("Valentin", 15)
+        'users(2) = New User("NC", 0)
+        'users(3) = New User("NC", 0)
+        'For Each user In users
+        'user.generateDeck(pick)
+        'Next
         changePlayer()
 
         'Methode de test
@@ -81,17 +81,15 @@
 
     Private Sub dropzone_DragDrop(sender As Object, e As DragEventArgs) Handles dropzone.DragDrop
         Dim datas As dragPictBoxInfo = e.Data.GetData(GetType(dragPictBoxInfo))
-        If (combinaisonWasAutorised(sender, datas.tag) Or sender.Equals(dropzone)) Then
-            If (sender.Equals(dropzone)) Then
-                AddPointToActiveUser(1)
-            End If
-            sender.Image = datas.img
-            sender.Tag = datas.tag
-            sender.allowDrop = False
-            createDropzones(sender)
-        Else
-            'Annuler un drag&drop
+        If (sender.Equals(dropzone)) Then
+            AddPointToActiveUser(1)
         End If
+        sender.Image = datas.img
+        sender.Tag = datas.tag
+        sender.allowDrop = False
+        createDropzones(sender)
+        AddPointToActiveUser(nb_points_tour)
+        nb_points_tour = 0
     End Sub
 
     Function allDeckIsEmpty() As Boolean
@@ -107,7 +105,9 @@
     End Function
 
     Private Sub dropzone_DragEnter(sender As Object, e As DragEventArgs) Handles dropzone.DragEnter
-        If e.Data.GetDataPresent(GetType(dragPictBoxInfo)) Then
+        Dim datas As dragPictBoxInfo = e.Data.GetData(GetType(dragPictBoxInfo))
+        nb_points_tour = combinaisonWasAutorised(sender, datas.tag)
+        If e.Data.GetDataPresent(GetType(dragPictBoxInfo)) And ((nb_points_tour > 0 Or sender.Equals(dropzone))) Then
             e.Effect = DragDropEffects.Move
         Else
             e.Effect = DragDropEffects.None
@@ -191,7 +191,7 @@
         Return False
     End Function
 
-    Function combinaisonWasAutorised(ByVal picBoxWasDroped As PictureBox, ByVal picBoxTag As Integer) As Boolean
+    Function combinaisonWasAutorised(ByVal picBoxWasDroped As PictureBox, ByVal picBoxTag As Integer) As Integer
 
 
         Dim checkingArround() As Integer = {3, 3, 3, 3}
@@ -203,7 +203,7 @@
                     'Verification gauche
                     If (IsNothing(picBox.Tag)) Then
                         checkingArround(0) = 1
-                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag))
+                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag)) Then
                         checkingArround(0) = 2
                     Else
                         checkingArround(0) = 0
@@ -213,7 +213,7 @@
                     'Verification droite
                     If (IsNothing(picBox.Tag)) Then
                         checkingArround(1) = 1
-                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag))
+                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag)) Then
                         checkingArround(1) = 2
                     Else
                         checkingArround(1) = 0
@@ -226,7 +226,7 @@
                     'Verification haut
                     If (IsNothing(picBox.Tag)) Then
                         checkingArround(2) = 1
-                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag))
+                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag)) Then
                         checkingArround(2) = 2
                     Else
                         checkingArround(2) = 0
@@ -236,7 +236,7 @@
                     'Verification bas
                     If (IsNothing(picBox.Tag)) Then
                         checkingArround(3) = 1
-                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag))
+                    ElseIf (pick.tokenInSameColor(picBox.Tag, picBoxTag) Or pick.tokenInSameForm(picBox.Tag, picBoxTag)) Then
                         checkingArround(3) = 2
                     Else
                         checkingArround(3) = 0
@@ -247,16 +247,16 @@
 
         If (InIntegerArray(2, checkingArround) = 0 Or InIntegerArray(0, checkingArround) > 0) Then
             'Revois Faux
-            Return False
+            Return 0
         Else
             If (InIntegerArray(2, checkingArround) = 1 And InIntegerArray(0, checkingArround) = 0) Then
                 'Revois Vrai + 1 point
-                AddPointToActiveUser(1)
-            ElseIf (InIntegerArray(2, checkingArround) > 1 And InIntegerArray(0, checkingArround) = 0)
+                Return 1
+            ElseIf (InIntegerArray(2, checkingArround) > 1 And InIntegerArray(0, checkingArround) = 0) Then
                 'Revois Vrai + 2 point
-                AddPointToActiveUser(2)
+                Return 2
             End If
-            Return True
+            Return 1
         End If
 
     End Function
