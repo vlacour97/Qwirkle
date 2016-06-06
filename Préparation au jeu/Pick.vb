@@ -24,6 +24,16 @@
         Return value
     End Function
 
+    Function count() As Integer
+        Dim response As Integer = 0
+        For Each token As Integer In tokens
+            If (Not (token = 0)) Then
+                response += 1
+            End If
+        Next
+        Return response
+    End Function
+
     Function isEmpty() As Boolean
         For Each token As Integer In tokens
             If (Not (token = 0)) Then

@@ -19,13 +19,13 @@
         nb_player = My.Forms.Form_Begin.getNbPlayer()
         pick = My.Forms.Form_Begin.getPick()
         dropzone.AllowDrop = True
-        'users(0) = New User("Antoine", 19)
-        'users(1) = New User("Valentin", 15)
-        'users(2) = New User("NC", 0)
-        'users(3) = New User("NC", 0)
-        'For Each user In users
-        'user.generateDeck(pick)
-        'Next
+        users(0) = New User("Antoine", 19)
+        users(1) = New User("Valentin", 15)
+        users(2) = New User("NC", 0)
+        users(3) = New User("NC", 0)
+        For Each user In users
+            user.generateDeck(pick)
+        Next
         changePlayer()
 
         'Methode de test
@@ -35,6 +35,7 @@
     Sub updateLblData()
         lbl_name_player.Text = "Joueur : " & activeUser.getName
         lbl_score.Text = "Score : " & activeUser.getNbPoints
+        lbl_nbOfToken.Text = "Nombre de jetons dans la pioche : " & pick.count
     End Sub
 
     Sub changePlayer()
@@ -290,12 +291,6 @@
         If (IsNothing(PictureBox6.Image)) Then
             activeUser.deleteToken(PictureBox6.Tag)
         End If
-    End Sub
-
-    'Pioche de tuiles
-    Private Sub picbox_reserve_Click(sender As Object, e As EventArgs) Handles picbox_reserve.Click
-        activeUser.dipIntoPick(pick)
-        showDeck(activeUser)
     End Sub
 
     'Echange de tuiles

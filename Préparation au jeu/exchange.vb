@@ -106,6 +106,7 @@
             My.Forms.Form_Partie.showDeck(ActiveUser)
             My.Forms.Form_Partie.blockDeck(False)
             Me.Close()
+            My.Forms.Form_Partie.changePlayer()
         End If
 
     End Sub
