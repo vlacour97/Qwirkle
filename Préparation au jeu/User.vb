@@ -5,6 +5,7 @@
     Dim nb_points As Integer
     Dim deckArray(5) As Integer
     Dim sizeBestDeck As Integer
+    Dim firstBestCombinaison(5) As Integer
 
     Sub New(ByVal nameValue As String, ByVal ageValue As Integer)
         name = nameValue
@@ -12,6 +13,19 @@
         nb_points = 0
         sizeBestDeck = 0
     End Sub
+
+    Sub setFirstBestCombinaison(ByVal array() As Integer)
+        firstBestCombinaison = array
+    End Sub
+
+    Function inFirstBestCombinaison(ByVal id As Integer) As Boolean
+        For Each token As Integer In firstBestCombinaison
+            If (token = id) Then
+                Return True
+            End If
+        Next
+        Return False
+    End Function
 
     Sub setNbPoints(ByVal nbPoints As Integer)
         nb_points = nbPoints

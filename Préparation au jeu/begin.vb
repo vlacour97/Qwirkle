@@ -258,6 +258,7 @@
             If (AbleForms + 1 = counter Or AbleColors + 1 = counter) Then
                 lbl_false.Visible = False
                 users(idUser).setSizeBestDeck(counter)
+                users(idUser).setFirstBestCombinaison(bestDeck)
                 If (idUser + 1 < nb_player) Then
                     showDeck(idUser + 1)
                 Else

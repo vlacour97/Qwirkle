@@ -19,16 +19,18 @@
         nb_player = My.Forms.Form_Begin.getNbPlayer()
         pick = My.Forms.Form_Begin.getPick()
         dropzone.AllowDrop = True
-        users(0) = New User("Antoine", 19)
-        users(1) = New User("Valentin", 15)
-        users(2) = New User("NC", 0)
-        users(3) = New User("NC", 0)
-        For Each user In users
-            user.generateDeck(pick)
-        Next
+        'Préparation pout test : initialisation des joueurs
+        'users(0) = New User("Antoine", 19)
+        'users(1) = New User("Valentin", 15)
+        'users(2) = New User("NC", 0)
+        'users(3) = New User("NC", 0)
+        'users(0).setFirstBestCombinaison(users(0).getDeckArray)
+        'For Each user In users
+        'User.generateDeck(pick)
+        'Next
         changePlayer()
 
-        'Methode de test
+        'Methode de test : Pioche Vidé
         'pick.ClearPick()
     End Sub
 
@@ -108,79 +110,69 @@
     Private Sub dropzone_DragEnter(sender As Object, e As DragEventArgs) Handles dropzone.DragEnter
         Dim datas As dragPictBoxInfo = e.Data.GetData(GetType(dragPictBoxInfo))
         nb_points_tour = combinaisonWasAutorised(sender, datas.tag)
-        If e.Data.GetDataPresent(GetType(dragPictBoxInfo)) And ((nb_points_tour > 0 Or sender.Equals(dropzone))) Then
+        If e.Data.GetDataPresent(GetType(dragPictBoxInfo)) And ((nb_points_tour > 0 Or sender.Equals(dropzone)) And ((nb_tour = 1 And activeUser.inFirstBestCombinaison(datas.tag)) Or nb_tour > 1)) Then
             e.Effect = DragDropEffects.Move
         Else
             e.Effect = DragDropEffects.None
         End If
     End Sub
 
-    Sub createDropzones(ByVal dropzone As PictureBox)
-        Dim newPictureBox1 As New PictureBox
-        Dim newPictureBox2 As New PictureBox
-        Dim newPictureBox3 As New PictureBox
-        Dim newPictureBox4 As New PictureBox
-        'Parametre communs
-        newPictureBox1.Image = My.Resources.ResourceManager.GetObject("dropzone")
-        newPictureBox1.SizeMode = PictureBoxSizeMode.Zoom
-        newPictureBox1.AllowDrop = True
-        newPictureBox2.Image = My.Resources.ResourceManager.GetObject("dropzone")
-        newPictureBox2.SizeMode = PictureBoxSizeMode.Zoom
-        newPictureBox2.AllowDrop = True
-        newPictureBox3.Image = My.Resources.ResourceManager.GetObject("dropzone")
-        newPictureBox3.SizeMode = PictureBoxSizeMode.Zoom
-        newPictureBox3.AllowDrop = True
-        newPictureBox4.Image = My.Resources.ResourceManager.GetObject("dropzone")
-        newPictureBox4.SizeMode = PictureBoxSizeMode.Zoom
-        newPictureBox4.AllowDrop = True
+    Sub createDropzones(ByRef dropzone As PictureBox)
+        'Verification de sortie de zone de jeu
+        If (isToHigh(dropzone)) Then
+            mouvToBottom(dropzone)
+        End If
+        If (isToLeft(dropzone)) Then
+            mouvToLeft(dropzone)
+        End If
         'Dropzone en dessous
-        newPictureBox1.Name = "dropzone" & Panel1.Controls.Count - 1
-        newPictureBox1.Visible = True
-        newPictureBox1.Top = dropzone.Top + dropzone.Height
-        newPictureBox1.Width = dropzone.Width
-        newPictureBox1.Height = dropzone.Height
-        newPictureBox1.Left = dropzone.Left
-        If (Not isInTheSamePlace(newPictureBox1)) Then
-            Panel1.Controls.Add(newPictureBox1)
-            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragDrop, AddressOf dropzone_DragDrop
-            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragEnter, AddressOf dropzone_DragEnter
-        End If
+        createDropzone(dropzone, dropzone.Top + dropzone.Height, dropzone.Left)
         'Dropzone au dessus
-        newPictureBox2.Name = "dropzone" & Panel1.Controls.Count - 1
-        newPictureBox2.Visible = True
-        newPictureBox2.Top = dropzone.Top - dropzone.Height
-        newPictureBox2.Width = dropzone.Width
-        newPictureBox2.Height = dropzone.Height
-        newPictureBox2.Left = dropzone.Left
-        If (Not isInTheSamePlace(newPictureBox2)) Then
-            Panel1.Controls.Add(newPictureBox2)
-            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragDrop, AddressOf dropzone_DragDrop
-            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragEnter, AddressOf dropzone_DragEnter
-        End If
+        createDropzone(dropzone, dropzone.Top - dropzone.Height, dropzone.Left)
         'Dropzone à droite
-        newPictureBox3.Name = "dropzone" & Panel1.Controls.Count - 1
-        newPictureBox3.Visible = True
-        newPictureBox3.Top = dropzone.Top
-        newPictureBox3.Width = dropzone.Width
-        newPictureBox3.Height = dropzone.Height
-        newPictureBox3.Left = dropzone.Left + dropzone.Width
-        If (Not isInTheSamePlace(newPictureBox3)) Then
-            Panel1.Controls.Add(newPictureBox3)
-            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragDrop, AddressOf dropzone_DragDrop
-            AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragEnter, AddressOf dropzone_DragEnter
-        End If
+        createDropzone(dropzone, dropzone.Top, dropzone.Left + dropzone.Width)
         'Dropzone à gauche
-        newPictureBox4.Name = "dropzone" & Panel1.Controls.Count - 1
-        newPictureBox4.Visible = True
-        newPictureBox4.Top = dropzone.Top
-        newPictureBox4.Width = dropzone.Width
-        newPictureBox4.Height = dropzone.Height
-        newPictureBox4.Left = dropzone.Left - dropzone.Width
-        If (Not isInTheSamePlace(newPictureBox4)) Then
-            Panel1.Controls.Add(newPictureBox4)
+        createDropzone(dropzone, dropzone.Top, dropzone.Left - dropzone.Width)
+    End Sub
+
+    Sub createDropzone(ByVal dropzone As PictureBox, ByVal top As Integer, ByVal left As Integer)
+        Dim newPictureBox As New PictureBox
+        newPictureBox.Image = My.Resources.ResourceManager.GetObject("dropzone")
+        newPictureBox.SizeMode = PictureBoxSizeMode.Zoom
+        newPictureBox.AllowDrop = True
+        newPictureBox.Name = "dropzone" & Panel1.Controls.Count - 1
+        newPictureBox.Visible = True
+        newPictureBox.Top = top
+        newPictureBox.Width = dropzone.Width
+        newPictureBox.Height = dropzone.Height
+        newPictureBox.Left = left
+        If (Not isInTheSamePlace(newPictureBox)) Then
+            Panel1.Controls.Add(newPictureBox)
             AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragDrop, AddressOf dropzone_DragDrop
             AddHandler Panel1.Controls.Item(Panel1.Controls.Count - 1).DragEnter, AddressOf dropzone_DragEnter
         End If
+    End Sub
+
+    Function isToHigh(ByVal sender As PictureBox) As Boolean
+        Return (sender.Top - sender.Height) < 0
+    End Function
+
+    Function isToLeft(ByVal sender As PictureBox) As Boolean
+        Return (sender.Left - sender.Width) < 0
+    End Function
+
+    Sub mouvToBottom(ByVal dropzone As PictureBox)
+        Dim difference As Double = -dropzone.Top + dropzone.Height
+        For Each pictureBox In Panel1.Controls
+            pictureBox.Top += difference
+        Next
+    End Sub
+
+    Sub mouvToLeft(ByVal dropzone As PictureBox)
+        Dim difference As Double = -dropzone.Left + dropzone.Width
+        For Each pictureBox In Panel1.Controls
+            pictureBox.Top += difference
+        Next
     End Sub
 
     Function isInTheSamePlace(ByVal picboxArg As PictureBox) As Boolean
