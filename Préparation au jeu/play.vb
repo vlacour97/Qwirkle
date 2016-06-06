@@ -171,7 +171,7 @@
     Sub mouvToLeft(ByVal dropzone As PictureBox)
         Dim difference As Double = -dropzone.Left + dropzone.Width
         For Each pictureBox In Panel1.Controls
-            pictureBox.Top += difference
+            pictureBox.Left += difference
         Next
     End Sub
 

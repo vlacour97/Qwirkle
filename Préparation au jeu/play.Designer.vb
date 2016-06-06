@@ -88,7 +88,7 @@ Partial Class Form_Partie
         Me.gb_tuiles.Controls.Add(Me.PictureBox3)
         Me.gb_tuiles.Controls.Add(Me.PictureBox2)
         Me.gb_tuiles.Controls.Add(Me.PictureBox1)
-        Me.gb_tuiles.Location = New System.Drawing.Point(117, 469)
+        Me.gb_tuiles.Location = New System.Drawing.Point(117, 508)
         Me.gb_tuiles.Name = "gb_tuiles"
         Me.gb_tuiles.Size = New System.Drawing.Size(670, 107)
         Me.gb_tuiles.TabIndex = 3
@@ -156,9 +156,9 @@ Partial Class Form_Partie
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Panel1.AutoScroll = True
         Me.Panel1.Controls.Add(Me.dropzone)
-        Me.Panel1.Location = New System.Drawing.Point(12, 70)
+        Me.Panel1.Location = New System.Drawing.Point(8, 72)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(892, 376)
+        Me.Panel1.Size = New System.Drawing.Size(900, 420)
         Me.Panel1.TabIndex = 4
         '
         'dropzone
@@ -176,7 +176,7 @@ Partial Class Form_Partie
         Me.picbox_switch.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.picbox_switch.Image = CType(resources.GetObject("picbox_switch.Image"), System.Drawing.Image)
         Me.picbox_switch.InitialImage = CType(resources.GetObject("picbox_switch.InitialImage"), System.Drawing.Image)
-        Me.picbox_switch.Location = New System.Drawing.Point(28, 481)
+        Me.picbox_switch.Location = New System.Drawing.Point(43, 527)
         Me.picbox_switch.Name = "picbox_switch"
         Me.picbox_switch.Size = New System.Drawing.Size(39, 40)
         Me.picbox_switch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -188,7 +188,7 @@ Partial Class Form_Partie
         Me.picbox_past.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.picbox_past.Image = CType(resources.GetObject("picbox_past.Image"), System.Drawing.Image)
         Me.picbox_past.InitialImage = CType(resources.GetObject("picbox_past.InitialImage"), System.Drawing.Image)
-        Me.picbox_past.Location = New System.Drawing.Point(802, 492)
+        Me.picbox_past.Location = New System.Drawing.Point(802, 531)
         Me.picbox_past.Name = "picbox_past"
         Me.picbox_past.Size = New System.Drawing.Size(89, 29)
         Me.picbox_past.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
@@ -209,7 +209,7 @@ Partial Class Form_Partie
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(916, 553)
+        Me.ClientSize = New System.Drawing.Size(916, 592)
         Me.Controls.Add(Me.lbl_nbOfToken)
         Me.Controls.Add(Me.picbox_past)
         Me.Controls.Add(Me.picbox_switch)
