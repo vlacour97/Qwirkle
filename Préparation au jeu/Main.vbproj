@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{64DB3FD3-E215-4BD0-81D8-E53C5A3CE19C}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>Préparation_au_jeu.My.MyApplication</StartupObject>
-    <RootNamespace>Préparation_au_jeu</RootNamespace>
+    <StartupObject>main.My.MyApplication</StartupObject>
+    <RootNamespace>main</RootNamespace>
     <AssemblyName>Qwirkle</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
